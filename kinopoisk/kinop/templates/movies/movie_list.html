@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineNight</title>
+    <link rel="icon" href="{% static 'kinopoisk/media/kinop.ico' %}">
+    <link rel="stylesheet" href="{% static 'kinopoisk/css/style_list.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{% static 'kinopoisk/media/background_image.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+
+<header class="bg-light p-3 d-flex justify-content-between align-items-center">
+    <h1 class="h4">CineNight</h1>
+    <button class="navbar-toggler" type="button" aria-expanded="false" aria-label="Toggle navigation"
+        onclick="toggleMenu()">
+        <span class="navbar-toggler-icon" style="background-color: #f67c00; width: 30px;
+            height: 3px; display: block; margin: 5px 0;"></span>
+        <span class="navbar-toggler-icon" style="background-color: #f67c00; width: 30px;
+            height: 3px; display: block; margin: 5px 0;"></span>
+        <span class="navbar-toggler-icon" style="background-color: #f67c00; width: 30px;
+            height: 3px; display: block; margin: 5px 0;"></span>
+    </button>
+    <nav class="flex-grow-1">
+        <ul class="nav justify-content-center list-unstyled mb-0" id="navbarNav">
+            <li class="nav-item"><a href="{% url 'movie_list' %}" class="nav-link">Главная</a></li>
+            <li class="nav-item"><a href="{% url 'movies' %}" class="nav-link">Фильмы</a></li>
+            <li class="nav-item"><a href="{% url 'series' %}" class="nav-link">Сериалы</a></li>
+            <li class="nav-item"><a href="{% url 'cartoon' %}" class="nav-link">Мультфильмы</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Всплывающее меню -->
+<div id="popupMenu" style="display: none; position: fixed; top: 60px; right: 10px; background-color: white;
+    border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+    <ul class="nav flex-column p-2">
+        <li class="nav-item"><a href="{% url 'movie_list' %}" class="nav-link">Главная</a></li>
+        <li class="nav-item"><a href="{% url 'movies' %}" class="nav-link">Фильмы</a></li>
+        <li class="nav-item"><a href="{% url 'series' %}" class="nav-link">Сериалы</a></li>
+        <li class="nav-item"><a href="{% url 'cartoon' %}" class="nav-link">Мультфильмы</a></li>
+    </ul>
+</div>
+
+<!-- Карусель фильмов -->
+<div class="movie-carousel mb-4">
+    <div class="carousel-wrapper">
+        <div class="carousel-track">
+            <div class="movie-carousel" style="display: flex; overflow-x: auto;">
+                <div class="carousel-track" style="display: flex;">
+                    {% for movie in movies %}
+                        <div class="movie-item" onclick="window.location='{% url 'movie_detail' movie.pk %}'"
+                             style="flex: none; width: auto; margin-right: 10px;">
+                            {% if movie.image %}
+                                <img src="{{ movie.image.url }}" alt="{{ movie.title }}" class="carousel-image">
+                            {% else %}
+                                <img src="{{ movie.external_image_url }}" alt="{{ movie.title }}"
+                                     class="carousel-image">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <img src="https://i.imgur.com/zsScmOf.png" 
+        alt="Шапка сайта" class="header-image img-fluid">
+    <h1 class="h-1">CineNight</h1>
+
+    {% if user.is_staff %}
+        <a href="{% url 'movie_create' %}" class="btn btn-primary mb-3">Добавить фильм</a>
+    {% endif %}
+    <!-- Выпадающий список для фильтрации -->
+    <form action="{% url 'movie_list' %}" method="GET" class="mb-3">
+        <label for="genreFilter" class="form-label"></label>
+        <select name="genre" id="genreFilter" class="form-select">
+            <option value="all" {% if selected_genre == 'all' %}selected{% endif %}>Все жанры</option>
+            {% for genre in genres %}
+                <option value="{{ genre.name }}" {% if selected_genre == genre.name %}selected{% endif %}>{{ genre.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск по названию"
+                class="form-control mt-2"/>
+        <button type="submit" class="btn btn-primary mt-2">Применить фильтр</button>
+    </form>
+
+    <div class="row" id="movieList">
+        {% for movie in movies %}
+            <div class="col-12 col-sm-6 col-md-4 d-flex mb-4 movie-item" data-genre="{{ movie.genre.slug }}">
+                <div class="card flex-fill">
+                    {% if movie.image %}
+                        <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.title }}">
+                    {% elif movie.external_image_url %}
+                        <img src="{{ movie.external_image_url }}" class="card-img-top"
+                            alt="Внешнее изображение для {{ movie.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150x100" class="card-img-top"
+                            alt="Нет изображения для {{ movie.title }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text">{{ movie.description|truncatewords:20 }}</p>
+                        <div class="mt-auto">
+                            <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-info">Посмотреть</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<button class="scroll-to-top" onclick="scrollToTop()">⬆️ Наверх</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'kinopoisk/js/js_list.js' %}"></script>
+<script src="{% static 'kinopoisk/js/menu.js' %}"></script>
+</body>
+</html>

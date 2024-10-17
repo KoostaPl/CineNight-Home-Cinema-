@@ -1,0 +1,223 @@
+body {
+    background-image: url('{% static "/media/background_image.jpg" %}');
+    background-size: cover; /* Заполняет весь элемент фоном */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Не повторяет изображение */
+}
+
+.header-image {
+    width: 100%;
+    object-fit: cover;
+}
+
+
+.nav-link {
+    color: #050505 !important;
+
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100% !important; /* Заставляет карточки быть одинаковой высоты */
+}
+
+.card-img-top {
+    height: 366px;
+    object-fit: cover;
+}
+
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 60px; /* Отступ над футером */
+    right: 20px;
+    display: none;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.card-img {
+    width: 45% !important; /* Если вы хотите быть уверенным, что это правило переопределяет любые другие */
+    height: auto; /* Сохраняет пропорции изображения */
+}
+
+.card-img-top, .card-img-bottom {
+    width: 45% !important; /* Аналогично для других мест, где изображения могут помещаться */
+    height: auto; /* Сохраняет пропорции изображения */
+}
+
+
+.card-body {
+    flex-grow: 1; /* Позволяет телу карточки занимать оставшееся пространство */
+}
+
+.movie-item {
+    display: flex;
+    justify-content: center; /* Для центрирования карточек, если необходимо */
+}
+
+
+.h-1 {
+    color: white
+}
+
+
+.sidebar h2 {
+    color: #ecf0f1; /* Светлый цвет заголовка */
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.sidebar ul {
+    list-style: none; /* Убрать стандартные маркеры списка */
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0; /* Отступы между пунктами меню */
+}
+
+.sidebar a {
+    color: #ecf0f1; /* Цвет текста ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+    padding: 10px 15px; /* Отступы вокруг текста */
+    border-radius: 5px; /* Скругленные углы */
+    transition: background-color 0.3s; /* Плавный переход фона */
+}
+
+.sidebar a:hover {
+    background-color: #3498db; /* Цвет фона при наведении */
+}
+
+/* Стили для карусели */
+
+.movie-item {
+    display: inline-block; /* Выстраивает элементы в строку */
+    margin-right: 10px; /* Отступ между изображениями */
+}
+
+
+/* Стили для карусели изображений */
+.carousel-image {
+    width: 150px !important; /* Установите желаемую ширину */
+    height: 225px !important; /* Установите желаемую высоту */
+    object-fit: cover; /* Обтекание для сохранения пропорций */
+    border-radius: 5px; /* Закругление углов (по желанию) */
+}
+
+@media (min-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 32.333333% !important; /* Обратите внимание на использование !important */
+    }
+}
+
+.movie-carousel {
+    overflow: hidden; /* Скрывает переполнение */
+    position: relative; /* Позволяет позиционировать элементы внутри */
+}
+
+.carousel-wrapper {
+    display: flex;
+    width: 200%; /* Увеличивает ширину для бесконечной прокрутки */
+    animation: scroll 20s linear infinite; /* Анимация прокрутки */
+}
+
+.carousel-item {
+    flex: 1 0 20%; /* Задает ширину для каждого элемента */
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+    /* Прокрутка на 50% для эффекта бесконечности */
+}
+
+/*Сендвич меню*/
+/* Стили для перекрытия Bootstrap */
+nav {
+    display: flex;
+    justify-content: center; /* Центрируем меню */
+    flex-grow: 1;
+}
+
+.navbar-toggler {
+    display: none; /* Скрываем кнопку "сендвич" по умолчанию */
+}
+
+.navbar-nav {
+    display: flex; /* Горизонтальное расположение */
+    justify-content: center;
+}
+
+@media (max-width: 700px) {
+    .navbar-nav {
+        display: none; /* Скрываем меню по умолчанию */
+        flex-direction: column; /* Вертикальное размещение для выпадающего меню */
+        position: fixed; /* Фиксированное позиционирование для выпадающего меню */
+        top: 60px; /* Отступ от верха */
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.9); /* Темный фон с прозрачностью */
+        z-index: 1000; /* Выше других элементов */
+        padding: 3px 0; /* Отступы внутри меню */
+    }
+
+    .navbar-toggler {
+        display: block; /* Показываем кнопку "сендвич" на мобильных устройствах */
+    }
+
+
+}
+
+#popupMenu {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Закругленные углы */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Тень */
+    z-index: 1000;
+    min-width: 200px; /* Минимальная ширина */
+    animation: fadeIn 0.3s ease; /* Анимация появления */
+}
+
+#popupMenu .nav-item {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#popupMenu .nav-link {
+    display: block;
+    padding: 10px 15px; /* Отступы для ссылок */
+    color: #333; /* Цвет текста */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+#popupMenu .nav-link:hover {
+    background-color: #f67c00; /* Цвет фона при наведении */
+    color: white; /* Цвет текста при наведении */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+

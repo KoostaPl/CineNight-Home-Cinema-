@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if movie %}Редактирование: {{ movie.title }}{% else %}Добавить фильм{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="bg-light p-3 d-flex justify-content-between align-items-center">
+    <h1 class="h4">CineNight</h1>
+    <nav class="flex-grow-1">
+        <ul class="nav justify-content-center list-unstyled mb-0">
+            <li class="nav-item"><a href="{% url 'movie_list' %}" class="nav-link">Главная</a></li>
+            <li class="nav-item"><a href="{% url 'movies' %}" class="nav-link">Фильмы</a></li>
+            <li class="nav-item"><a href="{% url 'series' %}" class="nav-link">Сериалы</a></li>
+            <li class="nav-item"><a href="{% url 'cartoon' %}" class="nav-link">Мультфильм</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="container mt-4">
+    <h1>{% if movie %}Редактирование: {{ movie.title }}{% else %}Добавить фильм{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mt-3">
+            <label for="title" class="form-label">Название фильма</label>
+            <input type="text" class="form-control" id="title" name="title" required
+                   value="{{ movie.title|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание фильма</label>
+            <textarea class="form-control" id="description" name="description" required>{{ movie.description|default:'' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="trailer" class="form-label">Ссылка на трейлер</label>
+            <input type="url" class="form-control" id="trailer" name="trailer" required
+                   value="{{ movie.trailer|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="year" class="form-label">Год выхода</label>
+            <input type="number" class="form-control" id="year" name="year" required
+                   value="{{ movie.year|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="rating" class="form-label">Рейтинг</label>
+            <input type="text" class="form-control" id="rating" name="rating" required
+                   value="{{ movie.rating|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="genre" class="form-label">Жанр</label>
+            <select class="form-select" id="genre" name="genres" multiple required>
+                {% for genre in genres %}
+                    <option value="{{ genre.id }}"
+                            {% if genre in movie.genres.all %}selected{% endif %}>{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="media" class="form-label">Тип медиа</label>
+            <select class="form-select" id="media" name="media_types" multiple required>
+                {% for media_item in media_types %}
+                    <option value="{{ media_item.id }}"
+                            {% if media_item in movie.media_type.all %}selected{% endif %}>{{ media_item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="director_select" class="form-label">Выберите режиссера</label>
+            <select class="form-select" id="director_select" name="directors" multiple>
+                <option value="">-- Выберите режиссера --</option>
+                {% for director in directors %}
+                    <option value="{{ director.id }}">{{ director.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="new_director" class="form-label">Или введите имя нового режиссера</label>
+            <input type="text" class="form-control" id="new_director" name="new_director"
+                   placeholder="Введите имя нового режиссера">
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">Изображение</label>
+            <input type="file" class="form-control" id="image" name="image">
+        </div>
+        <button type="submit" class="btn btn-primary">{% if movie %}Сохранить изменения{% else %}Добавить фильм{% endif %}</button>
+        <a href="{% url 'movie_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
